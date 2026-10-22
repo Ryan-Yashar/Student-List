@@ -4,7 +4,11 @@
 using namespace std;
 
 int main() {
-  struct student_list {
+  struct student {
+	char firstName[21];
+	char lastName[21];
+	int id;
+	float gpa;
   }
   void addCommand(char *student_list) {
   }
