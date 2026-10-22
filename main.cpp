@@ -1,21 +1,87 @@
 #include <iostream>
 #include <cstring>
+#include <vector>
+#include <any> //allows for passing unknown of char array, int, and float into a function
+#include <format> //prints to 2 decimal places
 
 using namespace std;
 
+struct student {
+  char firstName[21];
+  char lastName[21];
+  int id;
+  float gpa;
+}
+bool verifyCorrect(any valuetoprint) {
+  while (true) {
+    bool correct;
+    while (correct != 'y' && correct != 'n') {
+      cout << "Is \"";
+	  switch (valuetoprint.type()) {
+	    case typeid(int):
+	      cout << any_cast<int>(valuetoprint);
+	      break;
+	    case typeid(char*):
+		  cout << any_cast<char*>(valuetoprint);
+		  break;
+	    case typeid(float)
+		  cout << format("{:.2f}", any_cast<float>(valuetoprint));
+	  }
+      cout << "\" correct? (y/n)";
+      cin.get(correct);
+      if (correct == 'y') {
+        return true;
+      } else if (correct == 'n') {
+	    cout << "Retrying...\n";
+		return false;
+      } else {
+	    cout << "You must enter y or n.\n";
+      }
+    }
+  }
+}
+void addCommand(vector<student>& student_list) {
+	student temp_student;
+	bool correct;
+	while (true) {
+	  cout << "Enter the student's first name: ";
+	  cin.get(21, temp_student.firstName);
+	  while (cin.get() != 10) {}
+	  if (verifyCorrect(temp_student.firstName)) {
+		  break;
+	  }
+	}
+	while (true) {
+	  cout << "Enter the student's last name: ";
+	  cin.get(21, temp_student.lastName);
+	  while (cin.get() != 10) {}
+	  if (verifyCorrect(temp_student.lastName)) {
+		  break;
+	  }
+	}
+	while (true) {
+	  cout << "Enter the student's ID number: ";
+	  cin.get(21, temp_student.id);
+	  while (cin.get() != 10) {}
+	  if (verifyCorrect(temp_student.firstName)) {
+		  break;
+	  }
+	}
+	while (true) {
+	  cout << "Enter the student's GPA: ";
+	  cin.get(21, temp_student.id);
+	  while (cin.get() != 10) {}
+	  if (verifyCorrect(temp_student.firstName)) {
+		  break;
+	  }
+	}
+}
+void printCommand(vector<student>& student_list) {
+}
+void deleteCommand(vector<student>& student_list) {
+}
 int main() {
-  struct student {
-	char firstName[21];
-	char lastName[21];
-	int id;
-	float gpa;
-  }
-  void addCommand(char *student_list) {
-  }
-  void printCommand(char *student_list) {
-  }
-  void deleteCommand(char *student_list) {
-  }
+  vector<student> student_list;
   char input[8];
   while (true) {
     cout << "Enter one of ADD, PRINT, DELETE, QUIT to continue. ADD prompts for a new student, PRINT prints the list of students, DELETE deletes one student from the list, and QUIT ends program execution. Input: ";
