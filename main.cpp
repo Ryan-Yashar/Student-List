@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
-#include <any> //allows for passing unknown of char array, int, and float into a function
-#include <format> //prints to 2 decimal places
+#include <variant> //allows for passing unknown of char pointer, int, and float into a function
+#include <iomanip> //prints to 2 decimal places
 
 using namespace std;
 
@@ -11,31 +11,33 @@ struct student {
   char lastName[21];
   int id;
   float gpa;
-}
-bool verifyCorrect(any valuetoprint) {
+};
+
+bool verifyCorrect(variant<int, char*, float> valuetoprint) {
   while (true) {
-    bool correct;
+    char correct;
     while (correct != 'y' && correct != 'n') {
       cout << "Is \"";
-	  switch (valuetoprint.type()) {
-	    case typeid(int):
-	      cout << any_cast<int>(valuetoprint);
-	      break;
-	    case typeid(char*):
-		  cout << any_cast<char*>(valuetoprint);
-		  break;
-	    case typeid(float)
-		  cout << format("{:.2f}", any_cast<float>(valuetoprint));
-	  }
+	    switch (valuetoprint.index()) {
+	      case 0:
+	        cout << get<0>(valuetoprint);
+	        break;
+	      case 1:
+		      cout << get<1>(valuetoprint);
+		      break;
+	      case 2:
+		      cout << fixed << setprecision(2) << get<2>(valuetoprint);
+	    }
       cout << "\" correct? (y/n)";
       cin.get(correct);
+      while (cin.get() != 10) {}
       if (correct == 'y') {
         return true;
       } else if (correct == 'n') {
-	    cout << "Retrying...\n";
-		return false;
+	      cout << "Retrying...\n";
+		    return false;
       } else {
-	    cout << "You must enter y or n.\n";
+	      cout << "You must enter y or n.\n";
       }
     }
   }
@@ -45,36 +47,20 @@ void addCommand(vector<student>& student_list) {
 	bool correct;
 	while (true) {
 	  cout << "Enter the student's first name: ";
-	  cin.get(21, temp_student.firstName);
+	  cin.get(temp_student.firstName, 21);
 	  while (cin.get() != 10) {}
 	  if (verifyCorrect(temp_student.firstName)) {
 		  break;
 	  }
 	}
-	while (true) {
-	  cout << "Enter the student's last name: ";
-	  cin.get(21, temp_student.lastName);
-	  while (cin.get() != 10) {}
-	  if (verifyCorrect(temp_student.lastName)) {
-		  break;
-	  }
-	}
-	while (true) {
-	  cout << "Enter the student's ID number: ";
-	  cin.get(21, temp_student.id);
-	  while (cin.get() != 10) {}
-	  if (verifyCorrect(temp_student.firstName)) {
-		  break;
-	  }
-	}
-	while (true) {
-	  cout << "Enter the student's GPA: ";
-	  cin.get(21, temp_student.id);
-	  while (cin.get() != 10) {}
-	  if (verifyCorrect(temp_student.firstName)) {
-		  break;
-	  }
-	}
+  while (true) {
+    cout << "Enter the student's first name: ";
+    cin.get(temp_student.lastName, 21);
+    while (cin.get() != 10) {}
+    if (verifyCorrect(temp_student.lastName)) {
+      break;
+    }
+  }
 }
 void printCommand(vector<student>& student_list) {
 }
@@ -90,13 +76,13 @@ int main() {
     if (strlen(input) > 6 && !(strcmp(input, "ADD") || strcmp(input, "PRINT") || strcmp(input, "DELETE") || strcmp(input, "QUIT"))) {
       cout << "Invalid input. Try again.\n";
     } else {
-      if (strcmp(input, "ADD")) {
-	addCommand();
-      } else if (strcmp(input, "PRINT")) {
-	printCommand();
-      } else if (strcmp(input, "DELETE")) {
-	deleteCommand();
-      } else if (strcmp(input, "QUIT")) {
+      if (!strcmp(input, "ADD")) {
+	addCommand(student_list);
+      } else if (!strcmp(input, "PRINT")) {
+	printCommand(student_list);
+      } else if (!strcmp(input, "DELETE")) {
+	deleteCommand(student_list);
+      } else if (!strcmp(input, "QUIT")) {
 	break;
       }
     }
