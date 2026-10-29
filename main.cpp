@@ -121,8 +121,8 @@ bool printCommand(vector<student>& student_list) {
     cout << "Students:\n";
     for (student student : student_list) {
       cout << student.firstName << ' ' << student.lastName << ", ID " << student.id << ", GPA " << student.gpa << '\n';
-    return true; //list contains students
     }
+	return true; //list contains students
   } else {
     cout << "The list is currently empty.\n";
   }
